@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta name http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <title>Peliculas</title>
 </head>
 <body>
@@ -28,6 +29,7 @@
             display: flex;
             justify-content: flex-end;
             background-color: var(--cuarto-color);
+            align-items: center;
         }
         .search{
             background-color: white;
@@ -53,11 +55,11 @@
         .personaje{
             width: 400px;
             margin: 15px;
-            background-color: var(--secondary-color);
+            background-color: var(--segundo-color);
             box-shadow: 10px 15px 1px black;
             position: relative;
             overflow: hidden;
-            border-radius: 20px;
+            border-radius: 5px;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -66,16 +68,16 @@
         .personaje img{
             width: 80%;
             height: 400px;
-            -object-fit: contain;
+        object-fit: contain;
         }
         .personaje-info{
-   color: var(--terceary-color);
+   color: var(--tercero-color);
    display: flex;
    align-items: center;
    justify-content: space-between;
    gap: 15px;
    padding: 0.8px 15px 15px;
-   letter-spacing: 8px;
+   letter-spacing: 5px;
         }
         .personaje-info h3{
             color: var(--segundo-color);
@@ -103,8 +105,8 @@
     </style>
 
     <header>
-        <img src="dbz.png" alt="logo" style="width: 100px">
-        <form id="form">
+         <form id="form">
+        <img src="dbz.jpg" alt="logo" class="logo" style="width: 100px"; height="70px;">
         <input type="text" id="search" class="search" placeholder="Busca tu pelicula"></form>
     </header>
      <main id="main"></main>
@@ -126,7 +128,7 @@
                 main.innerHTML = '';
 
                 characters.forEach((char) => {
-                    const {id, name, image, ki, maxKi, race, gender, description} = personaje;
+                    const {id, name, image, ki, maxKi, race, gender, description} = char;
                     const charElement = document.createElement('div');
                    charElement.classList.add('personaje');
                    charElement.innerHTML=`
@@ -140,15 +142,15 @@
                         <div class = "overview">
                             <h3>Descripcion</h3>
                             <p><strong>Ki:</strong> ${ki}</p>
-                             <p><strong>Max Ki:</strong> ${maxKi}</p>
+                             <p><strong>MaxKi:</strong> ${maxKi}</p>
                             ${description}
                             </div>`
-                            main.appendChild(charElements);
+                            main.appendChild(charElement);
                 })}
               
             form.addEventListener('submit', (e) =>{
                 e.preventDefault()
-                const searchTerm = search.value.tolowerCase();
+                const searchTerm = search.value.toLowerCase();
                 if(searchTerm && searchTerm !==''){
                     getCharacters(API_URL + `?name=${searchTerm}`)
                     search.value='';
