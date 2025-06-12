@@ -11,15 +11,14 @@
         *{
             box-sizing: border-box;
         }
-        :root{
-            --primer-color: #92B4F4;
-            --segundo-color: #403D58;
-            --tercero-color: #7fafcf;
-             --cuarto-color: #5f94b7;
-              --quinto-color: #4d8cb7;
-            
-        }
-        body{
+:root{
+    --primer-color: #b0e0ff; 
+    --segundo-color: #ffe4a1; 
+    --tercero-color: #87cfff; 
+    --cuarto-color: #ffdf91; 
+    --quinto-color: #68b0dd;
+}
+   body{
             background-color: var(--primer-color);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -38,7 +37,7 @@
             font-family: Verdana, Geneva, Tahoma, sans-serif;
             font-size: 15px;
             padding: 8px 15px;
-            color: var(--quinto-color)
+            color: var(--quinto-color);
         }
         .search::placeholder{
             color: var(--tercer-color) ;
@@ -104,61 +103,80 @@
         }
     </style>
 
-    <header>
+    <header> 
+        <img src="cine.jpg" alt="logo" class="logo" style="width: 100px"; height="70px;">
          <form id="form">
-        <img src="dbz.jpg" alt="logo" class="logo" style="width: 100px"; height="70px;">
-        <input type="text" id="search" class="search" placeholder="Busca tu pelicula"></form>
+        <input type="text" id="search" class="search" placeholder="Busca un personaje"></form>
     </header>
      <main id="main"></main>
 
     <script>
- const API_URL = 'https://dragonball-api.com/api/characters';
- const main = document.getElementById('main');
- const form = document.getElementById('form');
- const search = document.getElementById('search');
+const API_URL_Ricky = 'https://rickandmortyapi.com/api/character';
+  const API_URL_Potter = 'https://hp-api.onrender.com/api/characters';
 
-            getCharacters(API_URL) 
+  const main = document.getElementById('main');
+  const form = document.getElementById('form');
+  const search = document.getElementById('search');
 
-            async function getCharacters(url){
-                const res = await fetch(url);
-                const data = await res.json();
-                showCharacters(data.items || data);
-            }
-             function showCharacters(characters){
-                main.innerHTML = '';
+  getcharacter();
 
-                characters.forEach((char) => {
-                    const {id, name, image, ki, maxKi, race, gender, description} = char;
-                    const charElement = document.createElement('div');
-                   charElement.classList.add('personaje');
-                   charElement.innerHTML=`
-                    <img src = "${image}" alt="${image}">
-                   <div class="personaje-info">
-                    <h1>${id}</h1>
-                    <h3>${name}</h3>
-                    <br>
-                    ${race}
-                        </div>
-                        <div class = "overview">
-                            <h3>Descripcion</h3>
-                            <p><strong>Ki:</strong> ${ki}</p>
-                             <p><strong>MaxKi:</strong> ${maxKi}</p>
-                            ${description}
-                            </div>`
-                            main.appendChild(charElement);
-                })}
-              
-            form.addEventListener('submit', (e) =>{
-                e.preventDefault()
-                const searchTerm = search.value.toLowerCase();
-                if(searchTerm && searchTerm !==''){
-                    getCharacters(API_URL + `?name=${searchTerm}`)
-                    search.value='';
-                }else{
-                     window.location.reload();
-                }
-            })
-    </script>
-    
+  async function getcharacter() {
+    const [resRicky, resPotter] = await Promise.all([
+      fetch(API_URL_Ricky).then(res => res.json()),
+      fetch(API_URL_Potter).then(res => res.json())
+    ]);
+
+    const morty = resRicky.results || [];
+    const harry = resPotter || [];
+
+    showcharacter([...harry, ...morty]);
+  }
+
+  function showcharacter(character) {
+    main.innerHTML = '';
+
+    character.forEach((char) => {
+      let name = char.name || 'Desconocido';
+      let gender = char.gender || 'No identificado';
+      let species = char.species || 'Desconocida';
+      let image = char.image || '';
+        let actor = char.actor || 'Desconocido';
+      let status = char.status || (char.alive === false ? 'Deceased' : 'Alive');
+      let house = char.house || 'Desconocido';
+
+      const characterElement = document.createElement('div');
+      characterElement.classList.add('personaje');
+
+        characterElement.innerHTML = `
+          <img src="${image}" alt="${name}">
+
+          <div class="personaje-info">
+            <h3>${name}</h3>
+            <br>${gender}
+          </div>
+
+          <div class="overview">
+            <h3>Descripción</h3>
+             <p><strong>Especie:</strong> ${actor}</p>
+            <p><strong>Estado:</strong> ${status}</p>
+            <p><strong>Especie:</strong> ${species}</p>
+             <p><strong>Casa:</strong> ${house}</p>
+             
+          </div>`;
+     
+
+      main.appendChild(characterElement);})}
+
+                    form.addEventListener('submit', (e) =>{
+                    e.preventDefault()
+                    const searchTerm = search.value.toLowerCase();
+                    if(searchTerm && searchTerm !== ''){
+                        getCharacters(API_URL + `?name=${searchTerm}`)
+                        search.value='';
+                    }else{
+                        window.location.reload();
+                    }
+                })   
+      </script>
 </body>
 </html>
